@@ -31,6 +31,11 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    satisfied_paras = [para for para in paragraphs if select(para)]
+    satisfied_amount = len(satisfied_paras)
+    if k >= satisfied_amount:
+        return ''
+    return satisfied_paras[k]
     # END PROBLEM 1
 
 
@@ -50,6 +55,14 @@ def about(subject):
     assert all([lower(x) == x for x in subject]), 'subjects should be lowercase.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def identifier(para):
+        words = split(remove_punctuation(para))
+        for amatch in subject:
+            for word in words:
+                if lower(amatch) == lower(word):
+                    return True
+        return False
+    return identifier
     # END PROBLEM 2
 
 
@@ -80,6 +93,22 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if len(typed_words) == 0:
+        return 100.0 if len(source_words) == 0 else 0.0
+
+    matches = 0
+    if len(typed_words) >= len(source_words):
+        difference = len(typed_words) - len(source_words)
+        for i in range(len(typed_words) - difference):
+            if typed_words[i] == source_words[i]:
+                matches += 1
+        correctness = matches / len(typed_words) * 100
+        return correctness
+    for i in range(len(typed_words)):
+        if typed_words[i] == source_words[i]:
+            matches += 1
+    correctness = matches / len(typed_words) * 100
+    return correctness
     # END PROBLEM 3
 
 
