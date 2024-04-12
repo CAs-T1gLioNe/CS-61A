@@ -127,6 +127,8 @@ def wpm(typed, elapsed):
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    words_typed = len(typed) / 5
+    return words_typed * (60 / elapsed)
     # END PROBLEM 4
 
 
@@ -156,6 +158,11 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    differences = [diff_function(typed_word, word, limit) for word in word_list]
+    min_diff = min(differences)
+    return typed_word if min_diff > limit else word_list[differences.index(min_diff)]
     # END PROBLEM 5
 
 
@@ -182,7 +189,18 @@ def feline_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    # assert False, 'Remove this line'
+    if limit < 0:
+        return limit + 1
+    if len(typed) == len(source) == 0:
+        return abs(len(typed) - len(source))
+    if len(typed) * len(source) == 0:
+        return 1 + feline_fixes(typed[1:], source[1:], limit)
+    if typed[0] == source[0]:
+        return 0 + feline_fixes(typed[1:], source[1:], limit)
+    if typed[0] != source[0]:
+        return 1 + feline_fixes(typed[1:], source[1:], limit-1)
+    # ver.1
     # END PROBLEM 6
 
 
@@ -206,23 +224,60 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
+    # def remove(typen, target, restriction):
+    #     if typen[0] != target[0]:
+    #         return 1 + minimum_mewtations(typen[1:], target, restriction - 1)
+    #     return minimum_mewtations(typen[1:], target[1:], restriction)
+    #
+    # def insert(typen, target, restriction):
+    #     if typen[0] != target[0]:
+    #         return 1 + minimum_mewtations(typen, target[1:], restriction - 1)
+    #     return minimum_mewtations(typen[1:], target[1:], restriction)
+    #
+    # def replace(typen, target, restriction):
+    #     if typen[0] != target[0]:
+    #         return 1 + minimum_mewtations(typen[1:], target[1:], restriction - 1)
+    #     return minimum_mewtations(typen[1:], target[1:], restriction)
+    #
+    # if typed == source:
+    #     return 0
+    # if limit < 0:
+    #     return limit + 1
+    # if len(typed) * len(source) == 0:
+    #     return abs(len(typed) - len(source))
+    #
+    # removal = remove(typed, source, limit)
+    # insertion = insert(typed, source, limit)
+    # replacement = replace(typed, source, limit)
+    #
+    # strategy = min(removal, insertion, replacement)
+    #
+    # return strategy if strategy < limit else limit + 1
+
+    # assert False, 'Remove this line'
+    if limit < 0:  # Base cases should go here, you may add more base cases as needed.
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return limit + 1
         # END
     # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
+    if typed == source:  # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 0
         # END
+    if len(typed) * len(source) == 0:
+        return abs(len(typed) - len(source))
+    if typed[0] == source[0]:
+        return minimum_mewtations(typed[1:], source[1:], limit)
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = 1 + minimum_mewtations(typed, source[1:], limit - 1)  # Fill in these lines
+        remove = 1 + minimum_mewtations(typed[1:], source, limit - 1)
+        substitute = 1 + minimum_mewtations(typed[1:], source[1:], limit - 1)
         # BEGIN
+        strategy = min(add, remove, substitute)
         "*** YOUR CODE HERE ***"
-        # END
+        return strategy
 
 
 def final_diff(typed, source, limit):
