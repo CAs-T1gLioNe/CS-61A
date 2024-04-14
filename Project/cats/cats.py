@@ -318,6 +318,25 @@ def report_progress(typed, source, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    if len(typed) == 0:
+        progress = 0.0
+    else:
+        matches = 0
+        for word_index in range(min(len(typed), len(source))):
+            if typed[word_index] == source[word_index]:
+                matches += 1
+            else:
+                break
+        progress = matches / len(source)
+
+    user_info = {
+        'id': user_id,
+        'progress': progress
+    }
+
+    upload(user_info)
+
+    return progress
     # END PROBLEM 8
 
 
@@ -340,6 +359,10 @@ def time_per_word(words, timestamps_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    timepw = [[player_stat[i + 1] - player_stat[i] for i in range(len(player_stat) - 1)] for player_stat in
+              timestamps_per_player]
+
+    return match(words, timepw)
     # END PROBLEM 9
 
 
@@ -362,7 +385,77 @@ def fastest_words(match):
     word_indices = range(len(get_all_words(match)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
-    # END PROBLEM 10
+    num_players = len(get_all_times(match))
+    num_words = len(get_all_words(match))
+    results = [[] for _ in range(num_players)]  # 初始化每个玩家的最快单词列表
+
+    # 遍历每个单词
+    for word_index in range(num_words):
+        # 初始化最快时间为无限大
+        min_time = float('inf')
+        fastest_player_index = 0  # 存储当前最快玩家的索引
+
+        # 找出打这个词最快的玩家
+        for player_index in range(num_players):
+            current_time = time(match, player_index, word_index)
+            # 如果找到更快的时间，更新最快时间和玩家索引
+            if current_time < min_time:
+                min_time = current_time
+                fastest_player_index = player_index
+
+        # 将这个词添加到最快玩家的列表中
+        results[fastest_player_index].append(get_word(match, word_index))
+
+    return results
+
+    # output = [[] for _ in player_indices]
+    #
+    # for word in word_indices:
+    #     fastest_time = float('inf')
+    #     fastest_player = 0
+    #     for player in player_indices:
+    #         player_time = time(match, player, word)
+    #         if player_time < fastest_time:
+    #             fastest_time = player_time
+    #             fastest_player = player
+    #         elif player_time == fastest_time:
+    #             current_player_total = sum(time(match, player, previous_word) for previous_word in range(word-1))
+    #             fastest_player_total = sum(time(match, fastest_player, previous_word) for previous_word in range(word-1))
+    #             if current_player_total < fastest_player_total:
+    #                 fastest_player = player
+    #     output[fastest_player].append(get_word(match, word))
+    #
+    # return output
+
+    # GPT VERSION
+    # def fastest_words(match):
+    #     num_players = len(get_all_times(match))
+    #     num_words = len(get_all_words(match))
+    #     output = [[] for _ in range(num_players)]
+    #     cumulative_times = [[0] * num_words for _ in range(num_players)]
+    #
+    #     # 计算每个玩家的累积时间
+    #     for player in range(num_players):
+    #         for word in range(num_words):
+    #             cumulative_times[player][word] = time(match, player, word) + (
+    #                 cumulative_times[player][word - 1] if word > 0 else 0)
+    #
+    #     for word in range(num_words):
+    #         fastest_time = float('inf')
+    #         fastest_player = 0
+    #         for player in range(num_players):
+    #             player_time = time(match, player, word)
+    #             if player_time < fastest_time:
+    #                 fastest_time = player_time
+    #                 fastest_player = player
+    #             elif player_time == fastest_time:
+    #                 if cumulative_times[player][word] < cumulative_times[fastest_player][word]:
+    #                     fastest_player = player
+    #         output[fastest_player].append(get_word(match, word))
+    #
+    #     return output
+
+    # # END PROBLEM 10
 
 
 def match(words, times):
