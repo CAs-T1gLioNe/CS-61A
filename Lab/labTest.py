@@ -1,42 +1,40 @@
-a = [i*i if i % 2 == 0 else i-10 for i in [1, 2, 3, 4]]
-print(4 in a)
+# a = [i*i if i % 2 == 0 else i-10 for i in [1, 2, 3, 4]]
+# print(4 in a)
+#
+# b = [1, 2, 1 + 2]
+# print(b, b*2)
+#
+# r = range(3, 6)
+# print([r[0], r[2]])
+# print(list(range(10)))
+# print(b+[1])
+#
+# length = len(b)
 
-b = [1, 2, 1 + 2]
-print(b, b*2)
+fprices = {'oranges': 4, 'apples': 3, 'bananas': 2, 'kiwis': 9}
+required_fruits = ['apples', 'oranges', 'bananas']
+print(*[['1 ' + fruit] for fruit in required_fruits])
 
-r = range(3, 6)
-print([r[0], r[2]])
-print(list(range(10)))
-print(b+[1])
-
-length = len(b)
-
-
-def sums(n, m):
-    """Return lists that sum to n containing positive numbers up to m that
-    have no adjacent repeats.
-
-    >>> sums(5, 1)
-    []
-    >>> sums(5, 2)
-    [[2, 1, 2]]
-    >>> sums(5, 3)
-    [[1, 3, 1], [2, 1, 2], [2, 3], [3, 2]]
-    >>> sums(5, 5)
-    [[1, 3, 1], [1, 4], [2, 1, 2], [2, 3], [3, 2], [4, 1], [5]]
-    >>> sums(6, 3)
-    [[1, 2, 1, 2], [1, 2, 3], [1, 3, 2], [2, 1, 2, 1], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+def buy(required_fruits, prices, total_amount):
     """
-    if n < 0:
-        return []
-    if n == 0:
-        sums_to_zero = []       # The only way to sum to zero using positives
-        return [sums_to_zero]   # Return a list of all the ways to sum to zero
-    result = []
-    for k in range(1, m + 1):
-        result = result + [[k] + rest for rest in sums(n-k, m) if rest == [] or k != rest[0]]
-    return result
+    Print ways to buy some of each fruit so that the sum of prices is amount.
+    >>> prices = {'oranges': 4, 'apples': 3, 'bananas': 2, 'kiwis': 9}
+    >>> buy(['apples', 'oranges', 'bananas'], prices, 12)
+    [2 apples][1 orange][1 banana]
+    >>> buy(['apples', 'oranges', 'bananas'], prices, 16)
+    [2 apples][1 orange][3 bananas]
+    [2 apples][2 oranges][1 banana]
+    >>> buy(['apples', 'kiwis'], prices, 36)
+    [3 apples][3 kiwis]
+    [6 apples][2 kiwis]
+    [9 apples][1 kiwi]
+    """
+    left = total_amount - sum([prices[fruit] for fruit in required_fruits])
+    if left < 0:
+        print('not enough money')
+    if left == 0:
+        print(*[['1 ' + fruit for fruit in required_fruits]])
 
 
-print(a, length)
-print(a)
+tlist = [[1, 2], [2, 3]]
+print(*tlist)
